@@ -192,7 +192,6 @@ public abstract class CcProtoAspect extends NativeAspectClass implements Configu
               .link(
                   compilationInfo.getCcCompilationOutputs(),
                   compilationInfo.getCcCompilationContext());
-
       ccLibraryProviders =
           new TransitiveInfoProviderMapBuilder()
               .addAll(compilationInfo.getProviders())
@@ -268,6 +267,9 @@ public abstract class CcProtoAspect extends NativeAspectClass implements Configu
                   toolchain.getFdoProvider(),
                   ruleContext.getConfiguration())
               .enableCcNativeLibrariesProvider();
+      if (toolchain.supportsInterfaceSharedObjects()) {
+        helper.enableInterfaceSharedObjects();
+      }
       TransitiveInfoCollection runtime = getProtoToolchainProvider().runtime();
       if (runtime != null) {
         helper.addDeps(ImmutableList.of(runtime));
